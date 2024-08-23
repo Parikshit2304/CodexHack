@@ -1,5 +1,6 @@
 import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
+
 const chatInput=document.querySelector(".chat-input textarea");
 const sendChatBtn = document.querySelector(".chat-input span");
 const chatbox = document.querySelector(".chatbox");
@@ -39,6 +40,7 @@ const generateResponse =(incomingChatLi) =>{
       };
 // Send POST request to API , get response
 fetch(API_URL,requestOptions).then(res => res.json()).then(data => {
+    messageElement.textContent = data.candidates[0].content.parts[0].text;
     let content = data.candidates[0].content.parts[0].text
     content = content.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,"");
     messageElement.innerHTML = marked.parse(content);
@@ -47,6 +49,9 @@ fetch(API_URL,requestOptions).then(res => res.json()).then(data => {
     messageElement.textContent="Oops! Something Went wrong. Please Try Again.";
     
 }).finally(() =>chatbox.scrollTo(0,chatbox.scrollHeight));
+
+
+
 }
 
 const handleChat = () =>{
@@ -68,6 +73,7 @@ const handleChat = () =>{
     }, 600);
 
     
+
 }
 chatInput.addEventListener("input",()=>{
     chatInput.style.height=`${inputInitHeight}px`;
@@ -84,6 +90,8 @@ chatInput.addEventListener("keydown",(e)=>{
     }
 
 });
+
+
 sendChatBtn.addEventListener("click",handleChat);
 chatbotCloseBtn.addEventListener("click", () => document.querySelector(".bot").classList.remove("show-chatbot"));
 chatbotToggler.addEventListener("click", () => document.querySelector(".bot").classList.toggle("show-chatbot"));
